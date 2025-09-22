@@ -1,6 +1,6 @@
 import { StarField } from '@/components/StarField';
 import { StudoroSidebar } from '@/components/StudoroSidebar';
-import { TimerCard } from '@/components/TimerCard';
+import { StudoroApp } from '@/components/StudoroApp';
 
 const Index = () => {
   return (
@@ -12,9 +12,7 @@ const Index = () => {
       <StudoroSidebar />
       
       {/* Main Content */}
-      <div className="flex-1 relative">
-        <TimerCard />
-      </div>
+      <StudoroApp />
     </div>
   );
 };
