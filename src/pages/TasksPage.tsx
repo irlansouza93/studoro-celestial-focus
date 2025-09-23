@@ -3,9 +3,11 @@ import { Plus, Trash2, Circle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useStudoroStore } from '@/hooks/useStudoroStore';
+import { useSupabaseSync } from '@/hooks/useSupabaseSync';
 
 export const TasksPage = () => {
-  const { tasks, subjects, addTask, toggleTask, deleteTask } = useStudoroStore();
+  const { tasks, addTask, toggleTask, deleteTask } = useStudoroStore();
+  const { subjects } = useSupabaseSync();
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedPriority, setSelectedPriority] = useState<'low' | 'medium' | 'high'>('medium');

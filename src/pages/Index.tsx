@@ -1,20 +1,7 @@
-import { StarField } from '@/components/StarField';
-import { StudoroSidebar } from '@/components/StudoroSidebar';
-import { StudoroApp } from '@/components/StudoroApp';
+import { StudoroAppWithAuth } from '@/components/StudoroAppWithAuth';
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen bg-background overflow-hidden">
-      {/* Animated Background */}
-      <StarField />
-      
-      {/* Sidebar */}
-      <StudoroSidebar />
-      
-      {/* Main Content */}
-      <StudoroApp />
-    </div>
-  );
+  return <StudoroAppWithAuth />;
 };
 
 export default Index;

@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useSupabaseSync } from './useSupabaseSync';
 
-export type TimerMode = 'pomodoro' | 'short-break' | 'long-break';
+export type TimerMode = 'pomodoro' | 'short-break' | 'long-break' | 'free';
 export type TimerStatus = 'idle' | 'running' | 'paused';
 
 export interface StudoroState {
@@ -23,17 +24,11 @@ export interface StudoroState {
   // Navegação
   currentPage: string;
   
-  // Matérias
-  subjects: Array<{
-    id: string;
-    name: string;
-    icon: string;
-    color: string;
-    sessionsCompleted: number;
-    timeSpent: number; // em minutos
-  }>;
+  // Timer State - Enhanced
+  selectedSubjectId: string | null;
+  sessionStartTime: Date | null;
   
-  // Tarefas
+  // Tarefas (mantendo local por enquanto)
   tasks: Array<{
     id: string;
     title: string;
@@ -43,17 +38,15 @@ export interface StudoroState {
     createdAt: Date;
   }>;
   
-  // Actions
-  startTimer: () => void;
+  // Actions - Enhanced
+  startTimer: (subjectId?: string) => void;
   pauseTimer: () => void;
   resetTimer: () => void;
   completeSession: () => void;
   setTimerMode: (mode: TimerMode) => void;
   setCurrentPage: (page: string) => void;
+  setSelectedSubject: (id: string | null) => void;
   addXP: (amount: number) => void;
-  addSubject: (subject: Omit<StudoroState['subjects'][0], 'id' | 'sessionsCompleted' | 'timeSpent'>) => void;
-  updateSubject: (id: string, updates: Partial<StudoroState['subjects'][0]>) => void;
-  deleteSubject: (id: string) => void;
   addTask: (task: Omit<StudoroState['tasks'][0], 'id' | 'createdAt'>) => void;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
@@ -62,6 +55,7 @@ export interface StudoroState {
 const POMODORO_TIME = 25 * 60; // 25 minutos
 const SHORT_BREAK_TIME = 5 * 60; // 5 minutos
 const LONG_BREAK_TIME = 15 * 60; // 15 minutos
+const FREE_TIMER_TIME = 60 * 60; // 1 hora inicial para cronômetro livre
 
 export const useStudoroStore = create<StudoroState>()(
   persist(
@@ -82,24 +76,9 @@ export const useStudoroStore = create<StudoroState>()(
       
       currentPage: 'timer',
       
-      subjects: [
-        {
-          id: '1',
-          name: 'Matemática',
-          icon: '📊',
-          color: '#3b82f6',
-          sessionsCompleted: 0,
-          timeSpent: 0,
-        },
-        {
-          id: '2',
-          name: 'Português',
-          icon: '📚',
-          color: '#10b981',
-          sessionsCompleted: 0,
-          timeSpent: 0,
-        },
-      ],
+      // Enhanced timer state
+      selectedSubjectId: null,
+      sessionStartTime: null,
       
       tasks: [
         {
@@ -120,9 +99,13 @@ export const useStudoroStore = create<StudoroState>()(
         },
       ],
       
-      // Actions
-      startTimer: () => {
-        set({ timerStatus: 'running' });
+      // Actions - Enhanced
+      startTimer: (subjectId?: string) => {
+        set((state) => ({ 
+          timerStatus: 'running',
+          selectedSubjectId: subjectId || state.selectedSubjectId,
+          sessionStartTime: new Date()
+        }));
       },
       
       pauseTimer: () => {
@@ -135,11 +118,13 @@ export const useStudoroStore = create<StudoroState>()(
           pomodoro: POMODORO_TIME,
           'short-break': SHORT_BREAK_TIME,
           'long-break': LONG_BREAK_TIME,
+          free: FREE_TIMER_TIME,
         };
         
         set({
           timeRemaining: timeMap[timerMode],
           timerStatus: 'idle',
+          sessionStartTime: null,
         });
       },
       
@@ -178,17 +163,23 @@ export const useStudoroStore = create<StudoroState>()(
           pomodoro: POMODORO_TIME,
           'short-break': SHORT_BREAK_TIME,
           'long-break': LONG_BREAK_TIME,
+          free: FREE_TIMER_TIME,
         };
         
         set({
           timerMode: mode,
           timeRemaining: timeMap[mode],
           timerStatus: 'idle',
+          sessionStartTime: null,
         });
       },
       
       setCurrentPage: (page: string) => {
         set({ currentPage: page });
+      },
+
+      setSelectedSubject: (id: string | null) => {
+        set({ selectedSubjectId: id });
       },
       
       addXP: (amount: number) => {
@@ -211,33 +202,7 @@ export const useStudoroStore = create<StudoroState>()(
         });
       },
       
-      addSubject: (subject) => {
-        set((state) => ({
-          subjects: [
-            ...state.subjects,
-            {
-              ...subject,
-              id: Date.now().toString(),
-              sessionsCompleted: 0,
-              timeSpent: 0,
-            },
-          ],
-        }));
-      },
-      
-      updateSubject: (id: string, updates) => {
-        set((state) => ({
-          subjects: state.subjects.map((subject) =>
-            subject.id === id ? { ...subject, ...updates } : subject
-          ),
-        }));
-      },
-      
-      deleteSubject: (id: string) => {
-        set((state) => ({
-          subjects: state.subjects.filter((subject) => subject.id !== id),
-        }));
-      },
+      // Subjects management moved to Supabase hooks
       
       addTask: (task) => {
         set((state) => ({

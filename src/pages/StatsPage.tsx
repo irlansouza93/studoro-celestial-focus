@@ -1,19 +1,21 @@
 import { BarChart3, Clock, Zap, Target, TrendingUp, Calendar } from 'lucide-react';
 import { useStudoroStore } from '@/hooks/useStudoroStore';
+import { useSupabaseSync } from '@/hooks/useSupabaseSync';
 
 export const StatsPage = () => {
   const {
     level,
     xp,
     xpToNextLevel,
-    completedToday,
+    completedToday,  
     currentStreak,
     longestStreak,
     totalSessions,
-    subjects,
   } = useStudoroStore();
+  
+  const { subjects, profile } = useSupabaseSync();
 
-  const totalTimeSpent = subjects.reduce((total, subject) => total + subject.timeSpent, 0);
+  const totalTimeSpent = subjects.reduce((total, subject) => total + subject.total_study_time, 0);
   const averageSessionTime = totalSessions > 0 ? Math.round(totalTimeSpent / totalSessions) : 0;
 
   const formatTime = (minutes: number) => {
@@ -148,7 +150,7 @@ export const StatsPage = () => {
                 </p>
               ) : (
                 subjects
-                  .sort((a, b) => b.sessionsCompleted - a.sessionsCompleted)
+                  .sort((a, b) => b.total_sessions - a.total_sessions)
                   .slice(0, 5)
                   .map((subject) => (
                     <div key={subject.id} className="flex items-center justify-between">
@@ -158,10 +160,10 @@ export const StatsPage = () => {
                       </div>
                       <div className="text-right">
                         <span className="text-sm font-medium text-white">
-                          {subject.sessionsCompleted} sessões
+                          {subject.total_sessions} sessões
                         </span>
                         <div className="text-xs text-muted-foreground">
-                          {formatTime(subject.timeSpent)}
+                          {formatTime(subject.total_study_time)}
                         </div>
                       </div>
                     </div>

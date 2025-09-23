@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Plus, Trash2, BookOpen, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useStudoroStore } from '@/hooks/useStudoroStore';
+import { useSupabaseSync } from '@/hooks/useSupabaseSync';
 
 const availableIcons = ['📚', '📊', '🧮', '🔬', '🎨', '💻', '🌍', '🏛️', '🎵', '⚽', '📝', '🔍'];
 const availableColors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#84cc16', '#f97316'];
 
 export const SubjectsPage = () => {
-  const { subjects, addSubject, updateSubject, deleteSubject } = useStudoroStore();
+  const { subjects, addSubject, updateSubject, deleteSubject } = useSupabaseSync();
   const [newSubjectName, setNewSubjectName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('📚');
   const [selectedColor, setSelectedColor] = useState('#3b82f6');
@@ -27,9 +27,9 @@ export const SubjectsPage = () => {
     }
   };
 
-  const handleUpdateSubject = (id: string, name: string) => {
+  const handleUpdateSubject = async (id: string, name: string) => {
     if (name.trim()) {
-      updateSubject(id, { name });
+      await updateSubject(id, { name });
       setEditingId(null);
     }
   };
@@ -133,29 +133,29 @@ export const SubjectsPage = () => {
                 style={{ borderLeft: `4px solid ${subject.color}` }}
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{subject.icon}</span>
-                    {editingId === subject.id ? (
-                      <Input
-                        defaultValue={subject.name}
-                        className="bg-secondary border-border text-white text-sm"
-                        onBlur={(e) => handleUpdateSubject(subject.id, e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            handleUpdateSubject(subject.id, e.currentTarget.value);
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <h3 
-                        className="font-semibold text-white cursor-pointer"
-                        onClick={() => setEditingId(subject.id)}
-                      >
-                        {subject.name}
-                      </h3>
-                    )}
-                  </div>
+              <div className="flex items-center space-x-3">
+                <span className="text-2xl">{subject.icon}</span>
+                {editingId === subject.id ? (
+                  <Input
+                    defaultValue={subject.name}
+                    className="bg-secondary border-border text-white text-sm"
+                    onBlur={(e) => handleUpdateSubject(subject.id, e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleUpdateSubject(subject.id, e.currentTarget.value);
+                      }
+                    }}
+                    autoFocus
+                  />
+                ) : (
+                  <h3 
+                    className="font-semibold text-white cursor-pointer"
+                    onClick={() => setEditingId(subject.id)}
+                  >
+                    {subject.name}
+                  </h3>
+                )}
+              </div>
                   
                   <Button
                     variant="ghost"
@@ -170,7 +170,7 @@ export const SubjectsPage = () => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Sessões completadas</span>
-                    <span className="text-white font-medium">{subject.sessionsCompleted}</span>
+                    <span className="text-white font-medium">{subject.total_sessions}</span>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm">
@@ -179,7 +179,7 @@ export const SubjectsPage = () => {
                       Tempo total
                     </span>
                     <span className="text-white font-medium">
-                      {formatTime(subject.timeSpent)}
+                      {formatTime(subject.total_study_time)}
                     </span>
                   </div>
                   
@@ -189,12 +189,12 @@ export const SubjectsPage = () => {
                         className="h-full rounded-full transition-all duration-300"
                         style={{ 
                           backgroundColor: subject.color,
-                          width: `${Math.min((subject.sessionsCompleted / 10) * 100, 100)}%`
+                          width: `${Math.min((subject.total_sessions / 10) * 100, 100)}%`
                         }}
                       />
                     </div>
                     <p className="text-xs text-muted-foreground mt-1 text-center">
-                      {subject.sessionsCompleted}/10 sessões para próximo nível
+                      {subject.total_sessions}/10 sessões para próximo nível
                     </p>
                   </div>
                 </div>
