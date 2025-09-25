@@ -43,6 +43,7 @@ export interface StudoroState {
   pauseTimer: () => void;
   resetTimer: () => void;
   completeSession: () => void;
+  completeCurrentSession: () => void;
   setTimerMode: (mode: TimerMode) => void;
   setCurrentPage: (page: string) => void;
   setSelectedSubject: (id: string | null) => void;
@@ -128,7 +129,7 @@ export const useStudoroStore = create<StudoroState>()(
         });
       },
       
-      completeSession: () => {
+      completeSessionOld: () => {
         const state = get();
         const { timerMode, currentSession, completedToday } = state;
         
@@ -200,6 +201,18 @@ export const useStudoroStore = create<StudoroState>()(
             xpToNextLevel: newXPToNextLevel,
           };
         });
+      },
+
+      completeSession: () => {
+        // Implementação vazia por agora - lógica movida para TimerCard
+      },
+
+      completeCurrentSession: () => {
+        set((state) => ({
+          ...state,
+          timerStatus: 'idle',
+          sessionStartTime: null,
+        }));
       },
       
       // Subjects management moved to Supabase hooks

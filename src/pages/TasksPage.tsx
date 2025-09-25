@@ -44,7 +44,8 @@ export const TasksPage = () => {
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen p-8">
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-start justify-center min-h-screen p-8">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -167,6 +168,7 @@ export const TasksPage = () => {
             })
           )}
         </div>
+      </div>
       </div>
     </div>
   );

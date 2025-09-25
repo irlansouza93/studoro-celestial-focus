@@ -54,7 +54,8 @@ export const SettingsPage = () => {
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen p-8">
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-start justify-center min-h-screen p-8">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -281,6 +282,7 @@ export const SettingsPage = () => {
             Faça backup dos seus dados regularmente. O reset apaga todas as estatísticas, matérias e tarefas.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

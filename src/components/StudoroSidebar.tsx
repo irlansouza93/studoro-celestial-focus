@@ -10,7 +10,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { icon: Timer, label: 'Timer', page: 'timer' },
+  { icon: Timer, label: 'Pomodoro', page: 'timer' },
   { icon: CheckSquare, label: 'Tarefas', page: 'tasks' },
   { icon: BookOpen, label: 'Matérias', page: 'subjects' },
   { icon: BarChart3, label: 'Estatísticas', page: 'stats' },

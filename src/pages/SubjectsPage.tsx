@@ -44,7 +44,8 @@ export const SubjectsPage = () => {
   };
 
   return (
-    <div className="flex items-start justify-center min-h-screen p-8">
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-start justify-center min-h-screen p-8">
       <div className="w-full max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -202,6 +203,7 @@ export const SubjectsPage = () => {
             ))
           )}
         </div>
+      </div>
       </div>
     </div>
   );
