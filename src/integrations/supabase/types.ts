@@ -82,36 +82,51 @@ export type Database = {
       }
       study_sessions: {
         Row: {
+          correct_answers: number | null
           created_at: string | null
           duration_minutes: number
           ended_at: string
+          had_exercises: boolean | null
           id: string
+          mood: string | null
+          notes: string | null
           session_type: string | null
           started_at: string
           subject_id: string
           user_id: string
+          wrong_answers: number | null
           xp_earned: number | null
         }
         Insert: {
+          correct_answers?: number | null
           created_at?: string | null
           duration_minutes: number
           ended_at: string
+          had_exercises?: boolean | null
           id?: string
+          mood?: string | null
+          notes?: string | null
           session_type?: string | null
           started_at: string
           subject_id: string
           user_id: string
+          wrong_answers?: number | null
           xp_earned?: number | null
         }
         Update: {
+          correct_answers?: number | null
           created_at?: string | null
           duration_minutes?: number
           ended_at?: string
+          had_exercises?: boolean | null
           id?: string
+          mood?: string | null
+          notes?: string | null
           session_type?: string | null
           started_at?: string
           subject_id?: string
           user_id?: string
+          wrong_answers?: number | null
           xp_earned?: number | null
         }
         Relationships: [

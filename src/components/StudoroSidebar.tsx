@@ -11,7 +11,7 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { icon: Timer, label: 'Pomodoro', page: 'timer' },
-  { icon: CheckSquare, label: 'Tarefas', page: 'tasks' },
+  { icon: CheckSquare, label: 'Atividades', page: 'activities' },
   { icon: BookOpen, label: 'Matérias', page: 'subjects' },
   { icon: BarChart3, label: 'Estatísticas', page: 'stats' },
   { icon: Palette, label: 'Temas', page: 'themes' },

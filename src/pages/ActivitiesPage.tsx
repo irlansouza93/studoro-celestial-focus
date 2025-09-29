@@ -86,7 +86,8 @@ export const ActivitiesPage = () => {
               <div className="space-y-3">
                 {recentSessions.map((session) => {
                   const subject = subjects.find(s => s.id === session.subject_id);
-                  const hasNotes = session.notes || session.mood || session.had_exercises;
+                  const sessionWithNotes = session as any; // Type assertion até migration ser aprovada
+                  const hasNotes = sessionWithNotes.notes || sessionWithNotes.mood || sessionWithNotes.had_exercises;
 
                   return (
                     <div
@@ -115,9 +116,9 @@ export const ActivitiesPage = () => {
                         </div>
                         
                         <div className="flex items-center space-x-2">
-                          {session.mood && (
+                          {sessionWithNotes.mood && (
                             <span className="text-xl" title="Humor">
-                              {getMoodEmoji(session.mood)}
+                              {getMoodEmoji(sessionWithNotes.mood)}
                             </span>
                           )}
                           <div className="text-accent text-sm font-medium">
@@ -127,26 +128,26 @@ export const ActivitiesPage = () => {
                       </div>
 
                       {/* Notes */}
-                      {session.notes && (
+                      {sessionWithNotes.notes && (
                         <div className="mt-3 pl-11">
                           <div className="bg-secondary/30 rounded-lg p-3 text-sm text-muted-foreground">
-                            {session.notes}
+                            {sessionWithNotes.notes}
                           </div>
                         </div>
                       )}
 
                       {/* Exercises */}
-                      {session.had_exercises && (
+                      {sessionWithNotes.had_exercises && (
                         <div className="mt-3 pl-11 flex items-center space-x-4 text-xs">
                           <span className="text-green-400">
-                            ✓ {session.correct_answers || 0} acertos
+                            ✓ {sessionWithNotes.correct_answers || 0} acertos
                           </span>
                           <span className="text-red-400">
-                            ✗ {session.wrong_answers || 0} erros
+                            ✗ {sessionWithNotes.wrong_answers || 0} erros
                           </span>
-                          {session.correct_answers && session.wrong_answers && (
+                          {sessionWithNotes.correct_answers && sessionWithNotes.wrong_answers && (
                             <span className="text-muted-foreground">
-                              ({Math.round((session.correct_answers / (session.correct_answers + session.wrong_answers)) * 100)}% de aproveitamento)
+                              ({Math.round((sessionWithNotes.correct_answers / (sessionWithNotes.correct_answers + sessionWithNotes.wrong_answers)) * 100)}% de aproveitamento)
                             </span>
                           )}
                         </div>

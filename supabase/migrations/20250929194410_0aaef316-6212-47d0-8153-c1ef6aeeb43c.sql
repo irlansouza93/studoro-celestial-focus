@@ -1,0 +1,7 @@
+-- Adicionar colunas para anotações de sessão
+ALTER TABLE study_sessions
+ADD COLUMN IF NOT EXISTS notes TEXT,
+ADD COLUMN IF NOT EXISTS mood VARCHAR(20),
+ADD COLUMN IF NOT EXISTS had_exercises BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS correct_answers INTEGER,
+ADD COLUMN IF NOT EXISTS wrong_answers INTEGER;
