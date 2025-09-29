@@ -35,8 +35,8 @@ export const ActivitiesPage = () => {
   };
 
   return (
-    <div className="h-screen overflow-y-auto scrollbar-hide">
-      <div className="flex items-start justify-center min-h-screen p-8">
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-start justify-center min-h-screen p-6">
         <div className="w-full max-w-5xl space-y-6">
           {/* Header */}
           <div className="text-center">
@@ -46,22 +46,22 @@ export const ActivitiesPage = () => {
 
           {/* Streak Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl mb-2">🔥</div>
-              <div className="text-3xl font-bold text-white mb-1">{currentStreak}</div>
-              <div className="text-sm text-muted-foreground">Ofensiva Atual</div>
+            <div className="glass rounded-lg p-4 text-center">
+              <div className="text-2xl mb-1">🔥</div>
+              <div className="text-2xl font-bold text-white mb-1">{currentStreak}</div>
+              <div className="text-xs text-muted-foreground">Ofensiva Atual</div>
             </div>
             
-            <div className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl mb-2">🏆</div>
-              <div className="text-3xl font-bold text-white mb-1">{longestStreak}</div>
-              <div className="text-sm text-muted-foreground">Melhor Ofensiva</div>
+            <div className="glass rounded-lg p-4 text-center">
+              <div className="text-2xl mb-1">🏆</div>
+              <div className="text-2xl font-bold text-white mb-1">{longestStreak}</div>
+              <div className="text-xs text-muted-foreground">Melhor Ofensiva</div>
             </div>
             
-            <div className="glass rounded-2xl p-6 text-center">
-              <div className="text-3xl mb-2">📚</div>
-              <div className="text-3xl font-bold text-white mb-1">{sessions.length}</div>
-              <div className="text-sm text-muted-foreground">Total de Sessões</div>
+            <div className="glass rounded-lg p-4 text-center">
+              <div className="text-2xl mb-1">📚</div>
+              <div className="text-2xl font-bold text-white mb-1">{sessions.length}</div>
+              <div className="text-xs text-muted-foreground">Total de Sessões</div>
             </div>
           </div>
 

@@ -45,8 +45,8 @@ export const SubjectsPage = () => {
 
   return (
     <div className="h-screen overflow-y-auto">
-      <div className="flex items-start justify-center min-h-screen p-8">
-      <div className="w-full max-w-4xl">
+      <div className="flex items-start justify-center min-h-screen p-6">
+      <div className="w-full max-w-5xl">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Matérias</h1>
@@ -130,12 +130,12 @@ export const SubjectsPage = () => {
             subjects.map((subject) => (
               <div
                 key={subject.id}
-                className="glass rounded-lg p-6 hover:scale-105 transition-transform duration-200"
-                style={{ borderLeft: `4px solid ${subject.color}` }}
+                className="glass rounded-lg p-4 hover:scale-105 transition-transform duration-200"
+                style={{ borderLeft: `3px solid ${subject.color}` }}
               >
-                <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <span className="text-2xl">{subject.icon}</span>
+                <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-2">
+                <span className="text-xl">{subject.icon}</span>
                 {editingId === subject.id ? (
                   <Input
                     defaultValue={subject.name}
@@ -150,7 +150,7 @@ export const SubjectsPage = () => {
                   />
                 ) : (
                   <h3 
-                    className="font-semibold text-white cursor-pointer"
+                    className="font-medium text-white cursor-pointer text-sm"
                     onClick={() => setEditingId(subject.id)}
                   >
                     {subject.name}
@@ -162,30 +162,30 @@ export const SubjectsPage = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => deleteSubject(subject.id)}
-                    className="text-muted-foreground hover:text-red-400 hover:bg-red-400/10"
+                    className="text-muted-foreground hover:text-red-400 hover:bg-red-400/10 h-7 w-7 p-0"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3 h-3" />
                   </Button>
                 </div>
                 
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Sessões completadas</span>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Sessões</span>
                     <span className="text-white font-medium">{subject.total_sessions}</span>
                   </div>
                   
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-xs">
                     <span className="text-muted-foreground flex items-center">
                       <Clock className="w-3 h-3 mr-1" />
-                      Tempo total
+                      Tempo
                     </span>
                     <span className="text-white font-medium">
                       {formatTime(subject.total_study_time)}
                     </span>
                   </div>
                   
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                  <div className="mt-3 pt-3 border-t border-border">
+                    <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full transition-all duration-300"
                         style={{ 
@@ -194,8 +194,8 @@ export const SubjectsPage = () => {
                         }}
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1 text-center">
-                      {subject.total_sessions}/10 sessões para próximo nível
+                    <p className="text-[10px] text-muted-foreground mt-1 text-center">
+                      {subject.total_sessions}/10 sessões
                     </p>
                   </div>
                 </div>

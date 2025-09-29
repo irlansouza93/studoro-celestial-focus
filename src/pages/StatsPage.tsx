@@ -52,9 +52,10 @@ export const StatsPage = () => {
   }
 
   return (
-    <div className="flex items-start justify-center min-h-screen p-4 md:p-8">
-      <div className="w-full max-w-7xl">
-        {/* Header */}
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-start justify-center min-h-screen p-6">
+        <div className="w-full max-w-6xl">
+          {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Analytics Avançado</h1>
           <p className="text-muted-foreground">Dashboard completo de produtividade e insights</p>
@@ -134,41 +135,41 @@ export const StatsPage = () => {
             <TimelineChart sessions={recentSessions} period={timelinePeriod} />
             
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="glass rounded-lg p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="glass rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <Calendar className="w-5 h-5 text-blue-400" />
-                  <span className="text-2xl font-bold text-white">{completedToday}</span>
+                  <Calendar className="w-4 h-4 text-blue-400" />
+                  <span className="text-xl font-bold text-white">{completedToday}</span>
                 </div>
-                <h3 className="text-sm font-medium text-white">Sessões Hoje</h3>
-                <p className="text-xs text-muted-foreground">Pomodoros completados</p>
+                <h3 className="text-xs font-medium text-white">Sessões Hoje</h3>
+                <p className="text-[10px] text-muted-foreground">Pomodoros completados</p>
               </div>
 
-              <div className="glass rounded-lg p-6">
+              <div className="glass rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <TrendingUp className="w-5 h-5 text-green-400" />
-                  <span className="text-2xl font-bold text-white">{currentStreak}</span>
+                  <TrendingUp className="w-4 h-4 text-green-400" />
+                  <span className="text-xl font-bold text-white">{currentStreak}</span>
                 </div>
-                <h3 className="text-sm font-medium text-white">Sequência Atual</h3>
-                <p className="text-xs text-muted-foreground">Dias consecutivos</p>
+                <h3 className="text-xs font-medium text-white">Sequência Atual</h3>
+                <p className="text-[10px] text-muted-foreground">Dias consecutivos</p>
               </div>
 
-              <div className="glass rounded-lg p-6">
+              <div className="glass rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <Target className="w-5 h-5 text-yellow-400" />
-                  <span className="text-2xl font-bold text-white">{longestStreak}</span>
+                  <Target className="w-4 h-4 text-yellow-400" />
+                  <span className="text-xl font-bold text-white">{longestStreak}</span>
                 </div>
-                <h3 className="text-sm font-medium text-white">Melhor Sequência</h3>
-                <p className="text-xs text-muted-foreground">Recorde pessoal</p>
+                <h3 className="text-xs font-medium text-white">Melhor Sequência</h3>
+                <p className="text-[10px] text-muted-foreground">Recorde pessoal</p>
               </div>
 
-              <div className="glass rounded-lg p-6">
+              <div className="glass rounded-lg p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <BarChart3 className="w-5 h-5 text-purple-400" />
-                  <span className="text-2xl font-bold text-white">{totalSessions}</span>
+                  <BarChart3 className="w-4 h-4 text-purple-400" />
+                  <span className="text-xl font-bold text-white">{totalSessions}</span>
                 </div>
-                <h3 className="text-sm font-medium text-white">Total de Sessões</h3>
-                <p className="text-xs text-muted-foreground">Pomodoros completados</p>
+                <h3 className="text-xs font-medium text-white">Total de Sessões</h3>
+                <p className="text-[10px] text-muted-foreground">Pomodoros completados</p>
               </div>
             </div>
           </TabsContent>
@@ -229,6 +230,7 @@ export const StatsPage = () => {
             />
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </div>
   );

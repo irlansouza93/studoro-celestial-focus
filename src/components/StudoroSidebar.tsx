@@ -1,7 +1,8 @@
 import { Timer, CheckSquare, BarChart3, Palette, Settings, Menu, X, BookOpen } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useStudoroStore } from '@/hooks/useStudoroStore';
+import { useSupabaseSync } from '@/hooks/useSupabaseSync';
 
 interface MenuItem {
   icon: typeof Timer;
@@ -23,12 +24,16 @@ export const StudoroSidebar = () => {
   const { 
     currentPage, 
     setCurrentPage, 
-    level, 
-    xp, 
-    xpToNextLevel, 
     completedToday, 
     currentStreak 
   } = useStudoroStore();
+  
+  const { profile } = useSupabaseSync();
+  
+  // Usar dados do Supabase quando disponível, senão usar do store local
+  const level = profile?.current_level || 1;
+  const xp = profile?.total_xp || 0;
+  const xpToNextLevel = level * 100;
 
   return (
     <div className={`sidebar-glass h-screen transition-all duration-300 ${

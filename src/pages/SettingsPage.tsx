@@ -55,8 +55,8 @@ export const SettingsPage = () => {
 
   return (
     <div className="h-screen overflow-y-auto">
-      <div className="flex items-start justify-center min-h-screen p-8">
-      <div className="w-full max-w-4xl">
+      <div className="flex items-start justify-center min-h-screen p-6">
+      <div className="w-full max-w-5xl">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Configurações</h1>

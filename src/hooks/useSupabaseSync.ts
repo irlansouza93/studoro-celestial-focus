@@ -276,6 +276,19 @@ export const useSupabaseSync = () => {
       };
 
       initializeData();
+      
+      // Escutar eventos de refresh para atualizar dados
+      const handleRefresh = () => {
+        fetchProfile();
+        fetchSubjects();
+        fetchRecentSessions();
+      };
+      
+      window.addEventListener('supabase-refresh', handleRefresh);
+      
+      return () => {
+        window.removeEventListener('supabase-refresh', handleRefresh);
+      };
     } else {
       setProfile(null);
       setSubjects([]);

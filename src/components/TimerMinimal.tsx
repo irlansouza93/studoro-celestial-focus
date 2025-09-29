@@ -35,26 +35,26 @@ export const TimerMinimal = ({ mode, onModeChange, onClose }: TimerMinimalProps)
 
   if (mode === 'fullscreen') {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="timer-display text-5xl font-light text-white mb-6">
+          <div className="timer-display text-3xl font-light text-white mb-4">
             {formattedTime}
           </div>
           {selectedSubject && (
-            <p className="text-sm text-muted-foreground mb-6">
+            <p className="text-xs text-muted-foreground mb-4">
               {selectedSubject.icon} {selectedSubject.name}
             </p>
           )}
-          <div className="flex items-center justify-center space-x-3">
+          <div className="flex items-center justify-center space-x-2">
             <Button
               onClick={handlePlayPause}
               size="sm"
-              className="w-10 h-10 rounded-full"
+              className="w-8 h-8 rounded-full"
             >
               {timerStatus === 'running' ? (
-                <Pause className="w-4 h-4" />
+                <Pause className="w-3 h-3" />
               ) : (
-                <Play className="w-4 h-4 ml-0.5" />
+                <Play className="w-3 h-3 ml-0.5" />
               )}
             </Button>
             <Button
@@ -63,7 +63,7 @@ export const TimerMinimal = ({ mode, onModeChange, onClose }: TimerMinimalProps)
               size="sm"
               className="text-muted-foreground hover:text-white"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3 h-3" />
             </Button>
           </div>
         </div>
