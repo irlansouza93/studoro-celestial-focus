@@ -12,21 +12,27 @@ export const useTimer = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
   useEffect(() => {
-    if (timerStatus === 'running' && timeRemaining > 0) {
+    if (timerStatus === 'running') {
       intervalRef.current = setInterval(() => {
         useStudoroStore.setState((state) => {
-          const newTime = state.timeRemaining - 1;
-          
-          // Se chegou a zero, completar sessão
-          if (newTime <= 0) {
-            setTimeout(() => {
-              state.completeSession();
-            }, 100);
+          // Para Pomodoro, conta regressiva
+          if (state.timerMode === 'pomodoro' || state.timerMode === 'short-break' || state.timerMode === 'long-break') {
+            const newTime = state.timeRemaining - 1;
             
-            return { timeRemaining: 0, timerStatus: 'idle' };
+            // Se chegou a zero, completar sessão
+            if (newTime <= 0) {
+              setTimeout(() => {
+                state.completeSession();
+              }, 100);
+              
+              return { timeRemaining: 0, timerStatus: 'idle' };
+            }
+            
+            return { timeRemaining: newTime };
+          } else {
+            // Para cronômetro livre, conta progressiva
+            return { timeRemaining: state.timeRemaining + 1 };
           }
-          
-          return { timeRemaining: newTime };
         });
       }, 1000);
     } else {
@@ -41,16 +47,27 @@ export const useTimer = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [timerStatus, timeRemaining]);
+  }, [timerStatus]);
   
   // Formatação do tempo
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    if (timerMode === 'free') {
+      // Cronômetro: formato HH:MM:SS contando para cima
+      const hours = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    } else {
+      // Pomodoro: formato MM:SS contando para baixo
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
   };
   
   const progress = () => {
+    if (timerMode === 'free') return 0; // Não mostra progress no cronômetro
+    
     const totalTime = timerMode === 'pomodoro' ? 25 * 60 : 
                      timerMode === 'short-break' ? 5 * 60 : 15 * 60;
     return ((totalTime - timeRemaining) / totalTime) * 100;

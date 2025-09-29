@@ -1,6 +1,6 @@
 import { useStudoroStore } from '@/hooks/useStudoroStore';
 import { TimerCard } from './TimerCard';
-import { TasksPage } from '@/pages/TasksPage';
+import { ActivitiesPage } from '@/pages/ActivitiesPage';
 import { SubjectsPage } from '@/pages/SubjectsPage';
 import { StatsPage } from '@/pages/StatsPage';
 import { ThemesPage } from '@/pages/ThemesPage';
@@ -13,8 +13,8 @@ export const StudoroApp = () => {
     switch (currentPage) {
       case 'timer':
         return <TimerCard />;
-      case 'tasks':
-        return <TasksPage />;
+      case 'activities':
+        return <ActivitiesPage />;
       case 'subjects':
         return <SubjectsPage />;
       case 'stats':

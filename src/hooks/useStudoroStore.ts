@@ -119,7 +119,7 @@ export const useStudoroStore = create<StudoroState>()(
           pomodoro: POMODORO_TIME,
           'short-break': SHORT_BREAK_TIME,
           'long-break': LONG_BREAK_TIME,
-          free: FREE_TIMER_TIME,
+          free: 0, // Cronômetro reseta para zero
         };
         
         set({
@@ -164,7 +164,7 @@ export const useStudoroStore = create<StudoroState>()(
           pomodoro: POMODORO_TIME,
           'short-break': SHORT_BREAK_TIME,
           'long-break': LONG_BREAK_TIME,
-          free: FREE_TIMER_TIME,
+          free: 0, // Cronômetro começa do zero
         };
         
         set({

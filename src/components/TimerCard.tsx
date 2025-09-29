@@ -122,16 +122,6 @@ export const TimerCard = () => {
     }
   };
 
-  const formatStopwatchTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    
-    if (hours > 0) {
-      return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const getModeIcon = () => {
     switch (timerMode) {
@@ -234,10 +224,7 @@ export const TimerCard = () => {
             {/* Timer Display */}
             <div className="text-center mb-8">
               <div className="timer-display text-6xl font-light text-white mb-4">
-                {timerMode === 'free' && timerStatus === 'running' 
-                  ? formatStopwatchTime(25 * 60 - timeRemaining) 
-                  : formattedTime
-                }
+                {formattedTime}
               </div>
               {timerMode === 'pomodoro' && (
                 <div className="w-full h-1 bg-muted rounded-full overflow-hidden">

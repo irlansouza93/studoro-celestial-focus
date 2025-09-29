@@ -110,6 +110,16 @@
     background: var(--gradient-space);
     @apply text-foreground min-h-screen overflow-hidden;
   }
+
+  /* Scrollbar invisível mas funcional */
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 }
 
 @layer components {
