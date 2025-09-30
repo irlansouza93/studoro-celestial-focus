@@ -11,14 +11,16 @@ interface TimerMinimalProps {
   mode: 'compact' | 'floating' | 'fullscreen';
   onModeChange: (mode: 'compact' | 'floating' | 'fullscreen') => void;
   onClose?: () => void;
-  onPause?: () => void;
+  onPlayPause?: () => void;
+  onComplete?: () => void;
 }
 
-export const TimerMinimal = ({ mode, onModeChange, onClose, onPause }: TimerMinimalProps) => {
+export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onComplete }: TimerMinimalProps) => {
   const {
     timerStatus,
     timerMode,
     selectedSubjectId,
+    sessionStartTime,
   } = useStudoroStore();
 
   const { subjects } = useSupabaseSync();
@@ -29,12 +31,6 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPause }: TimerMini
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
-
-  const handlePause = () => {
-    if (onPause) {
-      onPause();
-    }
-  };
 
   // Drag handlers para floating
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -86,13 +82,29 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPause }: TimerMini
             )}
             <div className="flex items-center justify-center space-x-4">
               <Button
-                onClick={handlePause}
+                onClick={onPlayPause}
                 size="lg"
                 variant="outline"
                 className="w-12 h-12 rounded-full"
               >
-                <Pause className="w-5 h-5" />
+                {timerStatus === 'running' ? (
+                  <Pause className="w-5 h-5" />
+                ) : (
+                  <Play className="w-5 h-5" />
+                )}
               </Button>
+              
+              {(timerStatus === 'running' || sessionStartTime) && (
+                <Button
+                  onClick={onComplete}
+                  variant="outline"
+                  size="lg"
+                  className="text-green-400 border-green-400 hover:bg-green-400 hover:text-white"
+                >
+                  ✓
+                </Button>
+              )}
+              
               <Button
                 onClick={onClose}
                 variant="ghost"
@@ -143,13 +155,29 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPause }: TimerMini
           
           <div className="flex items-center justify-center space-x-2">
             <Button
-              onClick={handlePause}
+              onClick={onPlayPause}
               size="sm"
               variant="outline"
               className="w-8 h-8 p-0 rounded-full"
             >
-              <Pause className="w-3 h-3" />
+              {timerStatus === 'running' ? (
+                <Pause className="w-3 h-3" />
+              ) : (
+                <Play className="w-3 h-3" />
+              )}
             </Button>
+            
+            {(timerStatus === 'running' || sessionStartTime) && (
+              <Button
+                onClick={onComplete}
+                size="sm"
+                variant="outline"
+                className="w-6 h-6 p-0 text-green-400 border-green-400"
+              >
+                ✓
+              </Button>
+            )}
+            
             <Button
               onClick={() => onModeChange('fullscreen')}
               variant="ghost"
@@ -165,54 +193,74 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPause }: TimerMini
   }
 
   return (
-    <div className="glass rounded-2xl p-6 animate-scale-in">
-      <div className="text-center">
-        <div className="timer-display text-4xl font-light text-white mb-4">
-          {formattedTime}
-        </div>
-        {selectedSubject && (
-          <p className="text-sm text-muted-foreground mb-4">
-            {selectedSubject.icon} {selectedSubject.name}
-          </p>
-        )}
-        
-        <div className="flex items-center justify-center space-x-4">
-          <Button
-            onClick={handlePause}
-            size="lg"
-            variant="outline"
-            className="w-12 h-12 rounded-full"
-          >
-            <Pause className="w-5 h-5" />
-          </Button>
-          
-          <Button
-            onClick={onClose}
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground hover:text-white"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Voltar
-          </Button>
-          
-          <Button
-            onClick={() => onModeChange('floating')}
-            variant="outline"
-            size="sm"
-            className="text-muted-foreground"
-          >
-            PiP
-          </Button>
-          
-          <Button
-            onClick={() => onModeChange('fullscreen')}
-            variant="outline"
-            size="sm"
-            className="text-muted-foreground"
-          >
-            <Maximize2 className="w-4 h-4" />
-          </Button>
+    <div className="h-screen overflow-y-auto">
+      <div className="flex items-center justify-center min-h-screen p-8">
+        <div className="w-full max-w-2xl">
+          <div className="glass rounded-2xl p-8 animate-scale-in">
+            <div className="text-center">
+              <div className="timer-display text-6xl font-light text-white mb-6">
+                {formattedTime}
+              </div>
+              {selectedSubject && (
+                <p className="text-lg text-muted-foreground mb-8">
+                  {selectedSubject.icon} {selectedSubject.name}
+                </p>
+              )}
+              
+              <div className="flex items-center justify-center space-x-4">
+                <Button
+                  onClick={onPlayPause}
+                  size="lg"
+                  className="w-16 h-16 rounded-full bg-primary hover:bg-primary-hover shadow-lg shadow-primary/25"
+                >
+                  {timerStatus === 'running' ? (
+                    <Pause className="w-6 h-6 text-white" />
+                  ) : (
+                    <Play className="w-6 h-6 text-white ml-1" />
+                  )}
+                </Button>
+                
+                {(timerStatus === 'running' || sessionStartTime) && (
+                  <Button
+                    onClick={onComplete}
+                    variant="outline"
+                    size="lg"
+                    className="text-green-400 border-green-400 hover:bg-green-400 hover:text-white"
+                  >
+                    ✓ Finalizar
+                  </Button>
+                )}
+                
+                <Button
+                  onClick={onClose}
+                  variant="ghost"
+                  size="lg"
+                  className="text-muted-foreground hover:text-white hover:bg-secondary"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Voltar
+                </Button>
+                
+                <Button
+                  onClick={() => onModeChange('floating')}
+                  variant="ghost"
+                  size="lg"
+                  className="text-muted-foreground hover:text-white hover:bg-secondary"
+                >
+                  PiP
+                </Button>
+                
+                <Button
+                  onClick={() => onModeChange('fullscreen')}
+                  variant="ghost"
+                  size="lg"
+                  className="text-muted-foreground hover:text-white hover:bg-secondary"
+                >
+                  <Maximize2 className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

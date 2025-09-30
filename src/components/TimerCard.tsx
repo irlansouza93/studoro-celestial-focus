@@ -39,7 +39,6 @@ export const TimerCard = () => {
   const handlePlayPause = () => {
     if (timerStatus === 'running') {
       pauseTimer();
-      // Não muda viewMode ao pausar
     } else {
       // Para Pomodoro, exigir seleção de matéria
       if (timerMode === 'pomodoro' && !selectedSubjectId && subjects.length > 0) {
@@ -47,7 +46,6 @@ export const TimerCard = () => {
         return;
       }
       startTimer(selectedSubjectId || undefined);
-      // Muda para compact quando inicia
       setViewMode('compact');
     }
   };
@@ -153,11 +151,9 @@ export const TimerCard = () => {
         <TimerMinimal 
           mode={viewMode}
           onModeChange={setViewMode}
-          onClose={() => {
-            setViewMode('full');
-            resetTimer();
-          }}
-          onPause={pauseTimer}
+          onClose={() => setViewMode('full')}
+          onPlayPause={handlePlayPause}
+          onComplete={handleCompleteSession}
         />
         
         <SessionNotesDialog
