@@ -198,6 +198,11 @@ export const useSupabaseSync = () => {
     started_at: string;
     ended_at: string;
     duration_minutes: number;
+    notes?: string;
+    mood?: string;
+    had_exercises?: boolean;
+    correct_answers?: number;
+    wrong_answers?: number;
   }) => {
     if (!user) return;
 
@@ -219,6 +224,9 @@ export const useSupabaseSync = () => {
       fetchSubjects(),
       fetchRecentSessions()
     ]);
+    
+    // Dispara evento global de atualização
+    window.dispatchEvent(new Event('supabase-refresh'));
   };
 
   // ===============================================

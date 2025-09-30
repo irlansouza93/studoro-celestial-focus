@@ -39,6 +39,7 @@ export const TimerCard = () => {
   const handlePlayPause = () => {
     if (timerStatus === 'running') {
       pauseTimer();
+      // Não muda viewMode ao pausar
     } else {
       // Para Pomodoro, exigir seleção de matéria
       if (timerMode === 'pomodoro' && !selectedSubjectId && subjects.length > 0) {
@@ -46,6 +47,8 @@ export const TimerCard = () => {
         return;
       }
       startTimer(selectedSubjectId || undefined);
+      // Muda para compact quando inicia
+      setViewMode('compact');
     }
   };
 
@@ -150,7 +153,11 @@ export const TimerCard = () => {
         <TimerMinimal 
           mode={viewMode}
           onModeChange={setViewMode}
-          onClose={() => setViewMode('full')}
+          onClose={() => {
+            setViewMode('full');
+            resetTimer();
+          }}
+          onPause={pauseTimer}
         />
         
         <SessionNotesDialog
@@ -167,7 +174,7 @@ export const TimerCard = () => {
   return (
     <div className="h-screen overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen p-8">
-        <div className="w-full max-w-2xl space-y-6">
+        <div className="w-full max-w-2xl space-y-6 transition-all duration-500 ease-in-out animate-fade-in">
           
           {/* Subject Selector - só mostra se não estiver rodando */}
           {!isRunningPomodoro && !isRunningFree && (timerMode === 'pomodoro' || timerMode === 'free') && (
@@ -199,7 +206,7 @@ export const TimerCard = () => {
           )}
 
           {/* Main Timer Card */}
-          <div className="glass rounded-2xl p-8">
+          <div className="glass rounded-2xl p-8 transition-all duration-500 ease-in-out animate-scale-in">
             {/* Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-2">
