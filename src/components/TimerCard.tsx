@@ -46,7 +46,10 @@ export const TimerCard = () => {
         return;
       }
       startTimer(selectedSubjectId || undefined);
-      setViewMode('compact');
+      // Só muda para compact se estiver em full view
+      if (viewMode === 'full') {
+        setViewMode('compact');
+      }
     }
   };
 
@@ -65,6 +68,12 @@ export const TimerCard = () => {
     const endTime = new Date();
     const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / (1000 * 60));
     
+    // Validação: mínimo 1 minuto
+    if (duration < 1) {
+      toast.error('Sessão muito curta. Mínimo 1 minuto.');
+      return;
+    }
+    
     const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
 
     const sessionData = {
@@ -76,7 +85,7 @@ export const TimerCard = () => {
     };
 
     // Para Pomodoro: salva diretamente
-    // Para Free timer: sempre mostra dialog de notas
+    // Para Free timer: SEMPRE mostra dialog de notas (nunca pula)
     if (timerMode === 'pomodoro' || skipNotes) {
       try {
         await recordSession(sessionData);
@@ -88,15 +97,18 @@ export const TimerCard = () => {
         toast.error('Erro ao registrar sessão');
       }
     } else {
-      // Cronômetro livre: sempre abre dialog de anotações
+      // Cronômetro livre: SEMPRE abre dialog de anotações
       setPendingSessionData({
         duration,
         subjectName: selectedSubject?.name || 'Sem matéria',
         sessionData
       });
-      setShowNotesDialog(true);
-      // Volta para full ao abrir o dialog
+      // Volta para full ANTES de abrir o dialog
       setViewMode('full');
+      // Abre dialog com um pequeno delay para garantir transição suave
+      setTimeout(() => {
+        setShowNotesDialog(true);
+      }, 300);
     }
   };
 
@@ -116,10 +128,22 @@ export const TimerCard = () => {
       toast.success(`Sessão de ${pendingSessionData.duration} min registrada! +${pendingSessionData.duration} XP`);
       resetTimer();
       setPendingSessionData(null);
-      setViewMode('full'); // Volta para view completo
+      setShowNotesDialog(false);
     } catch (error) {
       console.error('Erro ao registrar sessão:', error);
       toast.error('Erro ao registrar sessão');
+    }
+  };
+
+  // Handler para quando o dialog de notas é fechado sem salvar
+  const handleNotesDialogClose = (open: boolean) => {
+    setShowNotesDialog(open);
+    
+    // Se fechar o dialog sem salvar (pular), limpa a sessão pendente
+    if (!open && pendingSessionData) {
+      resetTimer();
+      setPendingSessionData(null);
+      toast.info('Sessão não registrada');
     }
   };
 
@@ -171,7 +195,7 @@ export const TimerCard = () => {
         
         <SessionNotesDialog
           open={showNotesDialog}
-          onOpenChange={setShowNotesDialog}
+          onOpenChange={handleNotesDialogClose}
           onSave={handleSaveSessionWithNotes}
           sessionDuration={pendingSessionData?.duration || 0}
           subjectName={pendingSessionData?.subjectName || ''}
@@ -356,7 +380,7 @@ export const TimerCard = () => {
         
         <SessionNotesDialog
           open={showNotesDialog}
-          onOpenChange={setShowNotesDialog}
+          onOpenChange={handleNotesDialogClose}
           onSave={handleSaveSessionWithNotes}
           sessionDuration={pendingSessionData?.duration || 0}
           subjectName={pendingSessionData?.subjectName || ''}
