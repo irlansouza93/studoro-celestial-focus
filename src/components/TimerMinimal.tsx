@@ -68,9 +68,9 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onCompl
 
   if (mode === 'fullscreen') {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background animate-fade-in">
         <StarField />
-        <div className="relative z-10 text-center animate-scale-in">
+        <div className="relative z-10 text-center animate-scale-in transition-all duration-300 ease-out">
           <div className="glass rounded-3xl p-12 backdrop-blur-xl">
             <div className="timer-display text-8xl font-light text-white mb-6">
               {formattedTime}
@@ -124,7 +124,7 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onCompl
   if (mode === 'floating') {
     return (
       <div 
-        className="fixed z-[99999] cursor-move"
+        className="fixed z-[99999] cursor-move animate-scale-in"
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
@@ -132,7 +132,7 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onCompl
         }}
         onMouseDown={handleMouseDown}
       >
-        <div className="glass rounded-lg p-3 min-w-[180px] shadow-2xl shadow-primary/20 backdrop-blur-xl border border-white/10">
+        <div className="glass rounded-lg p-3 min-w-[180px] shadow-2xl shadow-primary/20 backdrop-blur-xl border border-white/10 transition-all duration-300 ease-out">
           <div className="flex items-center justify-between mb-2">
             <div className="timer-display text-lg font-mono text-white">
               {formattedTime}
@@ -193,10 +193,10 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onCompl
   }
 
   return (
-    <div className="h-screen overflow-y-auto">
+    <div className="h-screen overflow-y-auto animate-fade-in">
       <div className="flex items-center justify-center min-h-screen p-8">
         <div className="w-full max-w-2xl">
-          <div className="glass rounded-2xl p-8 animate-scale-in">
+          <div className="glass rounded-2xl p-8 animate-scale-in transition-all duration-300 ease-out">
             <div className="text-center">
               <div className="timer-display text-6xl font-light text-white mb-6">
                 {formattedTime}

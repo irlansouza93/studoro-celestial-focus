@@ -65,41 +65,38 @@ export const TimerCard = () => {
     const endTime = new Date();
     const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / (1000 * 60));
     
-    // Garante pelo menos 1 minuto
-    if (duration < 1) {
-      toast.error('Sessão muito curta (mínimo 1 minuto)');
-      return;
-    }
-
     const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
 
     const sessionData = {
-      subject_id: selectedSubjectId || subjects[0]?.id, // Usa primeira matéria se não houver seleção
+      subject_id: selectedSubjectId || subjects[0]?.id,
       session_type: (timerMode === 'free' ? 'free' : timerMode === 'pomodoro' ? 'pomodoro' : 'break') as 'pomodoro' | 'free' | 'break',
       started_at: sessionStartTime.toISOString(),
       ended_at: endTime.toISOString(),
       duration_minutes: duration,
     };
 
-    if (skipNotes || timerMode === 'pomodoro') {
-      // Registra diretamente sem anotações
+    // Para Pomodoro: salva diretamente
+    // Para Free timer: sempre mostra dialog de notas
+    if (timerMode === 'pomodoro' || skipNotes) {
       try {
         await recordSession(sessionData);
         toast.success(`Sessão de ${duration} min registrada! +${duration} XP`);
         resetTimer();
-        setViewMode('full'); // Volta para view completo
+        setViewMode('full');
       } catch (error) {
         console.error('Erro ao registrar sessão:', error);
         toast.error('Erro ao registrar sessão');
       }
     } else {
-      // Abre dialog de anotações para cronômetro livre
+      // Cronômetro livre: sempre abre dialog de anotações
       setPendingSessionData({
         duration,
         subjectName: selectedSubject?.name || 'Sem matéria',
         sessionData
       });
       setShowNotesDialog(true);
+      // Volta para full ao abrir o dialog
+      setViewMode('full');
     }
   };
 
@@ -157,12 +154,10 @@ export const TimerCard = () => {
     }
   };
 
-  // Renderizar timer minimalista quando em execução
-  const showMinimal = timerStatus === 'running' && viewMode !== 'full';
   const isRunningPomodoro = timerStatus === 'running' && timerMode === 'pomodoro';
   const isRunningFree = timerStatus === 'running' && timerMode === 'free';
 
-  // Se timer está rodando em modo compacto/floating/fullscreen
+  // Se timer está rodando em modo compacto/floating/fullscreen - renderiza APENAS TimerMinimal
   if (viewMode !== 'full') {
     return (
       <>
@@ -185,10 +180,11 @@ export const TimerCard = () => {
     );
   }
 
+  // View mode: 'full' - renderiza card completo com animação
   return (
     <div className="h-screen overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen p-8">
-        <div className="w-full max-w-2xl space-y-6 transition-all duration-500 ease-in-out animate-fade-in">
+        <div className="w-full max-w-2xl space-y-6 animate-fade-in">
           
           {/* Subject Selector - só mostra se não estiver rodando */}
           {!isRunningPomodoro && !isRunningFree && (timerMode === 'pomodoro' || timerMode === 'free') && (
@@ -220,7 +216,7 @@ export const TimerCard = () => {
           )}
 
           {/* Main Timer Card */}
-          <div className="glass rounded-2xl p-8 transition-all duration-500 ease-in-out animate-scale-in">
+          <div className="glass rounded-2xl p-8 animate-scale-in transition-all duration-300 ease-out">
             {/* Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-2">
