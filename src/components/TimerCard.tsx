@@ -51,18 +51,34 @@ export const TimerCard = () => {
   };
 
   const handleCompleteSession = async (skipNotes = false) => {
-    if (!sessionStartTime || !selectedSubjectId) return;
+    if (!sessionStartTime) {
+      toast.error('Nenhuma sessão ativa');
+      return;
+    }
+
+    // Para cronômetro livre, permite salvar sem matéria selecionada
+    if (timerMode !== 'free' && !selectedSubjectId) {
+      toast.error('Selecione uma matéria');
+      return;
+    }
 
     const endTime = new Date();
     const duration = Math.round((endTime.getTime() - sessionStartTime.getTime()) / (1000 * 60));
+    
+    // Garante pelo menos 1 minuto
+    if (duration < 1) {
+      toast.error('Sessão muito curta (mínimo 1 minuto)');
+      return;
+    }
+
     const selectedSubject = subjects.find(s => s.id === selectedSubjectId);
 
     const sessionData = {
-      subject_id: selectedSubjectId,
+      subject_id: selectedSubjectId || subjects[0]?.id, // Usa primeira matéria se não houver seleção
       session_type: (timerMode === 'free' ? 'free' : timerMode === 'pomodoro' ? 'pomodoro' : 'break') as 'pomodoro' | 'free' | 'break',
       started_at: sessionStartTime.toISOString(),
       ended_at: endTime.toISOString(),
-      duration_minutes: Math.max(1, duration),
+      duration_minutes: duration,
     };
 
     if (skipNotes || timerMode === 'pomodoro') {
@@ -71,6 +87,7 @@ export const TimerCard = () => {
         await recordSession(sessionData);
         toast.success(`Sessão de ${duration} min registrada! +${duration} XP`);
         resetTimer();
+        setViewMode('full'); // Volta para view completo
       } catch (error) {
         console.error('Erro ao registrar sessão:', error);
         toast.error('Erro ao registrar sessão');
@@ -102,6 +119,7 @@ export const TimerCard = () => {
       toast.success(`Sessão de ${pendingSessionData.duration} min registrada! +${pendingSessionData.duration} XP`);
       resetTimer();
       setPendingSessionData(null);
+      setViewMode('full'); // Volta para view completo
     } catch (error) {
       console.error('Erro ao registrar sessão:', error);
       toast.error('Erro ao registrar sessão');

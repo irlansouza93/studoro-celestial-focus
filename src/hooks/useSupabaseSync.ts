@@ -206,6 +206,17 @@ export const useSupabaseSync = () => {
   }) => {
     if (!user) return;
 
+    // Atualização otimista local antes de salvar no banco
+    const xpGained = session.duration_minutes;
+    
+    if (profile) {
+      setProfile({
+        ...profile,
+        total_xp: profile.total_xp + xpGained,
+        current_level: Math.floor(Math.sqrt(profile.total_xp + xpGained) / 10) + 1,
+      });
+    }
+
     const { error } = await supabase
       .from('study_sessions')
       .insert({
@@ -215,10 +226,12 @@ export const useSupabaseSync = () => {
 
     if (error) {
       console.error('Erro ao registrar sessão:', error);
-      return;
+      // Reverter atualização otimista em caso de erro
+      await fetchProfile();
+      throw error;
     }
 
-    // Refresh data after recording
+    // Refresh data after recording (garante sincronização completa)
     await Promise.all([
       fetchProfile(),
       fetchSubjects(),

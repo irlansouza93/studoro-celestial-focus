@@ -106,7 +106,7 @@ export const TimerMinimal = ({ mode, onModeChange, onClose, onPlayPause, onCompl
               )}
               
               <Button
-                onClick={onClose}
+                onClick={() => onModeChange('compact')}
                 variant="ghost"
                 size="lg"
                 className="text-muted-foreground hover:text-white"
